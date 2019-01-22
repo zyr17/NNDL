@@ -1,17 +1,123 @@
 -----
-simple-SST-1
+simple-MR
 -----
-training epochs started 2019-01-22 18-43-10
-Evaluation at Epoch 1/10. Step:5187/51870. AccuracyMetric: acc=0.402194
-Evaluation at Epoch 2/10. Step:10374/51870. AccuracyMetric: acc=0.386654
-Evaluation at Epoch 3/10. Step:15561/51870. AccuracyMetric: acc=0.436929
-Evaluation at Epoch 4/10. Step:20748/51870. AccuracyMetric: acc=0.432358
-Evaluation at Epoch 5/10. Step:25935/51870. AccuracyMetric: acc=0.415905
-Evaluation at Epoch 6/10. Step:31122/51870. AccuracyMetric: acc=0.418647
-Evaluation at Epoch 7/10. Step:36309/51870. AccuracyMetric: acc=0.443327
-Evaluation at Epoch 8/10. Step:41496/51870. AccuracyMetric: acc=0.414991
-Evaluation at Epoch 9/10. Step:46683/51870. AccuracyMetric: acc=0.416819
-Evaluation at Epoch 10/10. Step:51870/51870. AccuracyMetric: acc=0.429616
+input fields after batch(if batch size is 2):
+        word_seq: (1)type:torch.Tensor (2)dtype:torch.int64, (3)shape:torch.Size([2, 20])
+target fields after batch(if batch size is 2):
+        label: (1)type:torch.Tensor (2)dtype:torch.int64, (3)shape:torch.Size([2])
 
-In Epoch:7/Step:36309, got best dev performance:AccuracyMetric: acc=0.443327
+training epochs started 2019-01-22 21-19-21
+Evaluation at Epoch 1/10. Step:300/3000. AccuracyMetric: acc=0.613508
+Evaluation at Epoch 2/10. Step:600/3000. AccuracyMetric: acc=0.669794
+Evaluation at Epoch 3/10. Step:900/3000. AccuracyMetric: acc=0.723265
+Evaluation at Epoch 4/10. Step:1200/3000. AccuracyMetric: acc=0.738274
+Evaluation at Epoch 5/10. Step:1500/3000. AccuracyMetric: acc=0.760788
+Evaluation at Epoch 6/10. Step:1800/3000. AccuracyMetric: acc=0.761726
+Evaluation at Epoch 7/10. Step:2100/3000. AccuracyMetric: acc=0.765478
+Evaluation at Epoch 8/10. Step:2400/3000. AccuracyMetric: acc=0.755159
+Evaluation at Epoch 9/10. Step:2700/3000. AccuracyMetric: acc=0.734522
+Evaluation at Epoch 10/10. Step:3000/3000. AccuracyMetric: acc=0.741088
+
+In Epoch:7/Step:2100, got best dev performance:AccuracyMetric: acc=0.765478
 Reloaded the best model.
+
+
+-----
+simple-SST1
+-----
+input fields after batch(if batch size is 2):
+        word_seq: (1)type:torch.Tensor (2)dtype:torch.int64, (3)shape:torch.Size([2, 37])
+target fields after batch(if batch size is 2):
+        label: (1)type:torch.Tensor (2)dtype:torch.int64, (3)shape:torch.Size([2])
+
+training epochs started 2019-01-22 19-58-57
+Evaluation at Epoch 1/10. Step:5187/51870. AccuracyMetric: acc=0.335
+Evaluation at Epoch 2/10. Step:10374/51870. AccuracyMetric: acc=0.434091
+Evaluation at Epoch 3/10. Step:15561/51870. AccuracyMetric: acc=0.401818
+Evaluation at Epoch 4/10. Step:20748/51870. AccuracyMetric: acc=0.400455
+Evaluation at Epoch 5/10. Step:25935/51870. AccuracyMetric: acc=0.355
+Evaluation at Epoch 6/10. Step:31122/51870. AccuracyMetric: acc=0.297727
+Evaluation at Epoch 7/10. Step:36309/51870. AccuracyMetric: acc=0.427727
+Evaluation at Epoch 8/10. Step:41496/51870. AccuracyMetric: acc=0.364091
+Evaluation at Epoch 9/10. Step:46683/51870. AccuracyMetric: acc=0.344545
+Evaluation at Epoch 10/10. Step:51870/51870. AccuracyMetric: acc=0.38
+
+In Epoch:2/Step:10374, got best dev performance:AccuracyMetric: acc=0.434091
+Reloaded the best model.
+
+
+-----
+simple-SST2
+-----
+input fields after batch(if batch size is 2):
+        word_seq: (1)type:torch.Tensor (2)dtype:torch.int64, (3)shape:torch.Size([2, 37])
+target fields after batch(if batch size is 2):
+        label: (1)type:torch.Tensor (2)dtype:torch.int64, (3)shape:torch.Size([2])
+
+training epochs started 2019-01-22 20-55-53
+Evaluation at Epoch 1/10. Step:2504/25040. AccuracyMetric: acc=0.806737
+Evaluation at Epoch 2/10. Step:5008/25040. AccuracyMetric: acc=0.803976
+Evaluation at Epoch 3/10. Step:7512/25040. AccuracyMetric: acc=0.815019
+Evaluation at Epoch 4/10. Step:10016/25040. AccuracyMetric: acc=0.798454
+Evaluation at Epoch 5/10. Step:12520/25040. AccuracyMetric: acc=0.802871
+Evaluation at Epoch 6/10. Step:15024/25040. AccuracyMetric: acc=0.795141
+Evaluation at Epoch 7/10. Step:17528/25040. AccuracyMetric: acc=0.790723
+Evaluation at Epoch 8/10. Step:20032/25040. AccuracyMetric: acc=0.760906
+Evaluation at Epoch 9/10. Step:22536/25040. AccuracyMetric: acc=0.795693
+Evaluation at Epoch 10/10. Step:25040/25040. AccuracyMetric: acc=0.770293
+
+In Epoch:3/Step:7512, got best dev performance:AccuracyMetric: acc=0.815019
+Reloaded the best model.
+
+
+-----
+simple-SUBJ
+-----
+input fields after batch(if batch size is 2):
+        word_seq: (1)type:torch.Tensor (2)dtype:torch.int64, (3)shape:torch.Size([2, 46])
+target fields after batch(if batch size is 2):
+        label: (1)type:torch.Tensor (2)dtype:torch.int64, (3)shape:torch.Size([2])
+
+training epochs started 2019-01-22 21-23-41
+Evaluation at Epoch 1/10. Step:282/2820. AccuracyMetric: acc=0.843
+Evaluation at Epoch 2/10. Step:564/2820. AccuracyMetric: acc=0.877
+Evaluation at Epoch 3/10. Step:846/2820. AccuracyMetric: acc=0.885
+Evaluation at Epoch 4/10. Step:1128/2820. AccuracyMetric: acc=0.873
+Evaluation at Epoch 5/10. Step:1410/2820. AccuracyMetric: acc=0.903
+Evaluation at Epoch 6/10. Step:1692/2820. AccuracyMetric: acc=0.878
+Evaluation at Epoch 7/10. Step:1974/2820. AccuracyMetric: acc=0.908
+Evaluation at Epoch 8/10. Step:2256/2820. AccuracyMetric: acc=0.887
+Evaluation at Epoch 9/10. Step:2538/2820. AccuracyMetric: acc=0.896
+Evaluation at Epoch 10/10. Step:2820/2820. AccuracyMetric: acc=0.89
+
+In Epoch:7/Step:1974, got best dev performance:AccuracyMetric: acc=0.908
+Reloaded the best model.
+
+
+-----
+simple-CR
+-----
+input fields after batch(if batch size is 2):
+        word_seq: (1)type:torch.Tensor (2)dtype:torch.int64, (3)shape:torch.Size([2, 20])
+target fields after batch(if batch size is 2):
+        label: (1)type:torch.Tensor (2)dtype:torch.int64, (3)shape:torch.Size([2])
+
+training epochs started 2019-01-22 21-29-09
+Evaluation at Epoch 1/10. Step:107/1070. AccuracyMetric: acc=0.66313
+Evaluation at Epoch 2/10. Step:214/1070. AccuracyMetric: acc=0.67374
+Evaluation at Epoch 3/10. Step:321/1070. AccuracyMetric: acc=0.72679
+Evaluation at Epoch 4/10. Step:428/1070. AccuracyMetric: acc=0.755968
+Evaluation at Epoch 5/10. Step:535/1070. AccuracyMetric: acc=0.748011
+Evaluation at Epoch 6/10. Step:642/1070. AccuracyMetric: acc=0.769231
+Evaluation at Epoch 7/10. Step:749/1070. AccuracyMetric: acc=0.755968
+Evaluation at Epoch 8/10. Step:856/1070. AccuracyMetric: acc=0.779841
+Evaluation at Epoch 9/10. Step:963/1070. AccuracyMetric: acc=0.766578
+Evaluation at Epoch 10/10. Step:1070/1070. AccuracyMetric: acc=0.782493
+
+In Epoch:10/Step:1070, got best dev performance:AccuracyMetric: acc=0.782493
+Reloaded the best model.
+
+
+-----
+simple-MPQA
+-----

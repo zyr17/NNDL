@@ -1,5 +1,6 @@
 import torch
 import fastNLP
+import pandas
 
 def cuda(tensor):
     """A cuda wrapper
@@ -122,7 +123,7 @@ def SST1(modelfunc):
 
     #print(traindata[1111], testdata[111])
 
-    model = modelfunc(embed_num=len(vocab),embed_dim=100,num_classes=2,kernel_nums=(3,4,5), kernel_sizes=(3,4,5),padding=0,dropout=0)
+    model = modelfunc(embed_num=len(vocab),embed_dim=100,num_classes=5,kernel_nums=(3,4,5), kernel_sizes=(3,4,5),padding=0,dropout=0)
     model.embed.dropout=torch.nn.Dropout(0.5)
 
     trainer = fastNLP.Trainer(model=model, 
@@ -141,7 +142,8 @@ def SST2(modelfunc):
         data.apply(lambda x: x['raw_sentence'].lower(), new_field_name='raw_sentence')
         data.apply(lambda x: int(float(x['label_str']) * 1.99999), new_field_name='label', is_target=True)
         data.apply(lambda x: x['raw_sentence'].split(), new_field_name='word_str')
-        data.drop(lambda x: x['label_str'] == '-1' or x['label_str'] == '0.5')
+        data.drop(lambda x: x['label_str'] == '-1')
+        data.drop(lambda x: float(x['label_str']) >= 0.4 and float(x['label_str']) < 0.6)
         return data
 
     traindata = getdata("data/SST/train_s.txt")
@@ -171,4 +173,53 @@ def SST2(modelfunc):
                       )
     trainer.train()
     
-SST2(fastNLP.models.CNNText)
+def TWO(data, label, modelfunc):
+    assert(len(data) == len(label))
+    dataset = fastNLP.DataSet({'raw_sentence': data, 'label_str': label})
+    dataset.drop(lambda x: len(x['raw_sentence']) == 0)
+    #[dataset.append(fastNLP.DataSet({'raw_sentence': data[x], 'label': label[x]})) for x in range(len(data))]
+    dataset.apply(lambda x: int(float(x['label_str'])), new_field_name='label', is_target=True)
+    dataset.apply(lambda x: x['raw_sentence'].split(), new_field_name='word_str')
+    
+    vocab = fastNLP.Vocabulary(min_freq = 1)
+    dataset.apply(lambda x: [vocab.add(word) for word in x['word_str']])
+    
+    traindata, testdata = dataset.split(0.1)
+    print(len(traindata), len(testdata))
+    
+    traindata.apply(lambda x: [vocab.to_index(word) for word in x['word_str']], new_field_name='word_seq', is_input=True)
+    testdata.apply(lambda x: [vocab.to_index(word) for word in x['word_str']], new_field_name='word_seq', is_input=True)
+    
+    model = modelfunc(embed_num=len(vocab),embed_dim=100,num_classes=2,kernel_nums=(3,4,5), kernel_sizes=(3,4,5),padding=0,dropout=0)
+    model.embed.dropout=torch.nn.Dropout(0.5)
+
+    trainer = fastNLP.Trainer(model=model, 
+                      train_data=traindata, 
+                      dev_data=testdata,
+                      loss=fastNLP.CrossEntropyLoss(),
+                      metrics=fastNLP.AccuracyMetric(),
+                      use_cuda = True,
+                      n_epochs=10
+                      )
+    trainer.train()
+
+
+pickle = pandas.read_pickle('data/MR.pkl')
+MRdata, MRlabel = list(pickle.sentence), list(pickle.label)
+pickle = pandas.read_pickle('data/SUBJ.pkl')
+SUBJdata, SUBJlabel = list(pickle.sentence), list(pickle.label)
+pickle = pandas.read_pickle('data/CR.pkl')
+CRdata, CRlabel = list(pickle.sentence), list(pickle.label)
+pickle = pandas.read_pickle('data/MPQA.pkl')
+MPQAdata, MPQAlabel = list(pickle.sentence), list(pickle.label)
+
+#print(len(MPQAdata), len(MPQAlabel))
+#print(MPQAdata[10110], MPQAlabel[10110])
+
+#TWO(MRdata, MRlabel, fastNLP.models.CNNText)
+#SST1(fastNLP.models.CNNText)
+#SST2(fastNLP.models.CNNText)
+#TWO(SUBJdata, SUBJlabel, fastNLP.models.CNNText)
+
+#TWO(CRdata, CRlabel, fastNLP.models.CNNText)
+TWO(MPQAdata, MPQAlabel, fastNLP.models.CNNText)
