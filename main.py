@@ -1,4 +1,5 @@
 import torch
+import fastNLP
 
 def cuda(tensor):
     """A cuda wrapper
@@ -64,7 +65,7 @@ class CNN(torch.nn.Module):
         self.emb2.weight.requires_grad = False
         if mode != 'simple':
             self.emb1.weight.data.copy(embdata)
-        if mode == 'fixed'
+        if mode == 'fixed':
             self.emb1.weight.requires_grad = False
             
         #in: [B, embdim, L] out: len(cnnkernel) * [B, cnndim, 1]
@@ -85,7 +86,7 @@ class CNN(torch.nn.Module):
     def forward(self, input): # [B, L, wordsize]
         x = self.emb1(input) # [B, L, embdim]
         
-        if mode = 'multi':
+        if mode == 'multi':
             print('multi not implemented.')
             assert(0)
         
@@ -100,3 +101,74 @@ class CNN(torch.nn.Module):
         
         return x
         
+def SST1(modelfunc):
+    def getdata(filename):
+        data = fastNLP.DataSet.read_csv(filename, headers=('raw_sentence', 'label_str'), sep='|')
+        data.apply(lambda x: x['raw_sentence'].lower(), new_field_name='raw_sentence')
+        data.apply(lambda x: int(float(x['label_str']) * 4.99999), new_field_name='label', is_target=True)
+        data.apply(lambda x: x['raw_sentence'].split(), new_field_name='word_str')
+        data.drop(lambda x: x['label_str'] == '-1')
+        return data
+
+    traindata = getdata("data/SST/train_s.txt")
+    [traindata.append(x) for x in getdata("data/SST/train_p.txt")]
+    testdata = getdata("data/SST/test_s.txt")
+
+    vocab = fastNLP.Vocabulary(min_freq = 1)
+    traindata.apply(lambda x: [vocab.add(word) for word in x['word_str']])
+    testdata.apply(lambda x: [vocab.add(word) for word in x['word_str']])
+    traindata.apply(lambda x: [vocab.to_index(word) for word in x['word_str']], new_field_name='word_seq', is_input=True)
+    testdata.apply(lambda x: [vocab.to_index(word) for word in x['word_str']], new_field_name='word_seq', is_input=True)
+
+    #print(traindata[1111], testdata[111])
+
+    model = modelfunc(embed_num=len(vocab),embed_dim=100,num_classes=2,kernel_nums=(3,4,5), kernel_sizes=(3,4,5),padding=0,dropout=0)
+    model.embed.dropout=torch.nn.Dropout(0.5)
+
+    trainer = fastNLP.Trainer(model=model, 
+                      train_data=traindata, 
+                      dev_data=testdata,
+                      loss=fastNLP.CrossEntropyLoss(),
+                      metrics=fastNLP.AccuracyMetric(),
+                      use_cuda = True,
+                      n_epochs=10
+                      )
+    trainer.train()
+    
+def SST2(modelfunc):
+    def getdata(filename):
+        data = fastNLP.DataSet.read_csv(filename, headers=('raw_sentence', 'label_str'), sep='|')
+        data.apply(lambda x: x['raw_sentence'].lower(), new_field_name='raw_sentence')
+        data.apply(lambda x: int(float(x['label_str']) * 1.99999), new_field_name='label', is_target=True)
+        data.apply(lambda x: x['raw_sentence'].split(), new_field_name='word_str')
+        data.drop(lambda x: x['label_str'] == '-1' or x['label_str'] == '0.5')
+        return data
+
+    traindata = getdata("data/SST/train_s.txt")
+    [traindata.append(x) for x in getdata("data/SST/train_p.txt")]
+    testdata = getdata("data/SST/test_s.txt")
+    
+    #print(len(testdata))
+
+    vocab = fastNLP.Vocabulary(min_freq = 1)
+    traindata.apply(lambda x: [vocab.add(word) for word in x['word_str']])
+    testdata.apply(lambda x: [vocab.add(word) for word in x['word_str']])
+    traindata.apply(lambda x: [vocab.to_index(word) for word in x['word_str']], new_field_name='word_seq', is_input=True)
+    testdata.apply(lambda x: [vocab.to_index(word) for word in x['word_str']], new_field_name='word_seq', is_input=True)
+
+    #print(traindata[1111], testdata[111])
+
+    model = modelfunc(embed_num=len(vocab),embed_dim=100,num_classes=2,kernel_nums=(3,4,5), kernel_sizes=(3,4,5),padding=0,dropout=0)
+    model.embed.dropout=torch.nn.Dropout(0.5)
+
+    trainer = fastNLP.Trainer(model=model, 
+                      train_data=traindata, 
+                      dev_data=testdata,
+                      loss=fastNLP.CrossEntropyLoss(),
+                      metrics=fastNLP.AccuracyMetric(),
+                      use_cuda = True,
+                      n_epochs=10
+                      )
+    trainer.train()
+    
+SST2(fastNLP.models.CNNText)
